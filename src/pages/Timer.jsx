@@ -116,7 +116,7 @@ export default function Timer() {
     })
 
     if (error) {
-      setSaveError('SAVE FAILED — TRY AGAIN')
+      setSaveError(error.message || error.code || JSON.stringify(error))
       setPhase(PHASES.ENTRY)
       return
     }
@@ -241,10 +241,13 @@ export default function Timer() {
           {saveError && (
             <p style={{
               fontFamily: 'var(--font-arcade)',
-              fontSize: '0.5rem',
+              fontSize: '0.45rem',
               color: 'var(--hot-pink)',
               marginTop: '12px',
-              letterSpacing: '2px',
+              letterSpacing: '1px',
+              lineHeight: '1.8',
+              wordBreak: 'break-word',
+              textAlign: 'center',
             }}>
               {saveError}
             </p>

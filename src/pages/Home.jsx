@@ -82,7 +82,7 @@ export default function Home() {
           letterSpacing: '1px',
           textAlign: 'center',
         }}>
-          Tackle 11 obstacles at Sparrow Haw Ranch<br />
+          Tackle 11 obstacles at Sparrow Hawk Ranch<br />
           and claim your spot as the toughest<br />
           and hardest to kill.
         </p>
