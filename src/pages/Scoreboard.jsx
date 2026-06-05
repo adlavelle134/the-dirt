@@ -19,7 +19,7 @@ export default function Scoreboard() {
 
     // Raw fetch test to bypass Supabase client
     try {
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/scores?select=*&order=time_ms.asc&limit=50`, {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/`, {
         headers: {
           apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
