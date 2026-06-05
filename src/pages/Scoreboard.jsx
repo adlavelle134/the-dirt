@@ -23,7 +23,7 @@ export default function Scoreboard() {
       .limit(50)
 
     if (err) {
-      setError('FAILED TO LOAD SCORES')
+      setError(`${err.message || err.code || JSON.stringify(err)} | URL: ${import.meta.env.VITE_SUPABASE_URL || 'MISSING'}`)
     } else {
       setScores(data || [])
     }
