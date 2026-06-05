@@ -214,21 +214,30 @@ body {
   font-size: clamp(2rem, 8vw, 4rem);
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: var(--hot-pink);
-  text-shadow: var(--glow-pink);
+  color: #ff2d78;
+  text-shadow:
+    0 0 2px #fff,
+    0 0 8px #ff2d78,
+    0 0 16px #ff2d78;
   animation: titlePulse 2s ease-in-out infinite;
   text-align: center;
   line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
 }
 
 @keyframes titlePulse {
-  0%, 100% { text-shadow: var(--glow-pink); }
+  0%, 100% {
+    text-shadow:
+      0 0 2px #fff,
+      0 0 8px #ff2d78,
+      0 0 16px #ff2d78;
+  }
   50% {
     text-shadow:
-      0 0 20px #ff2d78,
-      0 0 40px #ff2d78,
-      0 0 80px #ff2d78,
-      0 0 120px #ff2d78;
+      0 0 2px #fff,
+      0 0 10px #ff2d78,
+      0 0 24px #ff2d78,
+      0 0 40px #ff2d78;
   }
 }
 

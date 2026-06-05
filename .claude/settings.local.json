@@ -5,7 +5,8 @@
       "Bash(npx create-vite@latest . --template react)",
       "Bash(npm init *)",
       "Bash(npm install *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(vercel --version)"
     ]
   }
 }
