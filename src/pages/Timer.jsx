@@ -116,7 +116,7 @@ export default function Timer() {
     })
 
     if (error) {
-      setSaveError(error.message || error.code || JSON.stringify(error))
+      setSaveError(`${error.message} (${error.code})`)
       setPhase(PHASES.ENTRY)
       return
     }

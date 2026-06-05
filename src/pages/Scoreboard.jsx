@@ -17,33 +17,6 @@ export default function Scoreboard() {
     setRefreshing(true)
     setError('')
 
-    // Raw fetch test to bypass Supabase client
-    try {
-      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/scores?select=*`, {
-        headers: {
-          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        },
-      })
-      const text = await res.text()
-      if (!res.ok) {
-        setError(`HTTP ${res.status}: ${text}`)
-        setLoading(false)
-        setRefreshing(false)
-        return
-      }
-      const data = JSON.parse(text)
-      setScores(data || [])
-      setLoading(false)
-      setRefreshing(false)
-      return
-    } catch (fetchErr) {
-      setError(`FETCH ERROR: ${fetchErr.message}`)
-      setLoading(false)
-      setRefreshing(false)
-      return
-    }
-
     const { data, error: err } = await supabase
       .from('scores')
       .select('*')
@@ -51,7 +24,7 @@ export default function Scoreboard() {
       .limit(50)
 
     if (err) {
-      setError(JSON.stringify({ msg: err.message, code: err.code, details: err.details, hint: err.hint, url: import.meta.env.VITE_SUPABASE_URL }))
+      setError(`${err.message} (${err.code})`)
     } else {
       setScores(data || [])
     }
