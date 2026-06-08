@@ -18,7 +18,7 @@ export default function Scoreboard() {
     setError('')
 
     const { data, error: err } = await supabase
-      .from('scores')
+      .from('dirt_scores')
       .select('*')
       .order('time_ms', { ascending: true })
       .limit(50)

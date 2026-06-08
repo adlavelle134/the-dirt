@@ -14,7 +14,7 @@ export default function Admin() {
     setLoading(true)
     setError('')
     const { data, error: err } = await supabase
-      .from('scores')
+      .from('dirt_scores')
       .select('*')
       .order('time_ms', { ascending: true })
 
@@ -27,7 +27,7 @@ export default function Admin() {
 
   async function handleDelete(id) {
     setDeletingId(id)
-    await supabase.from('scores').delete().eq('id', id)
+    await supabase.from('dirt_scores').delete().eq('id', id)
     setScores(prev => prev.filter(s => s.id !== id))
     setDeletingId(null)
   }
@@ -35,7 +35,7 @@ export default function Admin() {
   async function handleClearAll() {
     setConfirmClearAll(false)
     setLoading(true)
-    await supabase.from('scores').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+    await supabase.from('dirt_scores').delete().neq('id', '00000000-0000-0000-0000-000000000000')
     setScores([])
     setLoading(false)
   }

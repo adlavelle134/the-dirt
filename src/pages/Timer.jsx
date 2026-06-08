@@ -110,7 +110,7 @@ export default function Timer() {
     setPhase(PHASES.SAVING)
     playVictoryJingle()
 
-    const { error } = await supabase.from('scores').insert({
+    const { error } = await supabase.from('dirt_scores').insert({
       initials: trimmed.padEnd(3, '_').slice(0, 3),
       time_ms: elapsedMs,
     })
