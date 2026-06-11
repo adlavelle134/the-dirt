@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase, formatTime, formatDate } from '../lib/supabase'
+import { fetchAllScores, deleteScore, deleteAllScores } from '../lib/db'
+import { formatTime, formatDate } from '../lib/supabase'
 
 export default function Admin() {
   const navigate = useNavigate()
@@ -13,13 +14,12 @@ export default function Admin() {
   const fetchAll = useCallback(async () => {
     setLoading(true)
     setError('')
-    const { data, error: err } = await supabase
-      .from('dirt_scores')
-      .select('*')
-      .order('time_ms', { ascending: true })
-
-    if (err) setError('FAILED TO LOAD')
-    else setScores(data || [])
+    try {
+      const rows = await fetchAllScores()
+      setScores(rows)
+    } catch (err) {
+      setError(err.message)
+    }
     setLoading(false)
   }, [])
 
@@ -27,7 +27,7 @@ export default function Admin() {
 
   async function handleDelete(id) {
     setDeletingId(id)
-    await supabase.from('dirt_scores').delete().eq('id', id)
+    await deleteScore(id)
     setScores(prev => prev.filter(s => s.id !== id))
     setDeletingId(null)
   }
@@ -35,7 +35,7 @@ export default function Admin() {
   async function handleClearAll() {
     setConfirmClearAll(false)
     setLoading(true)
-    await supabase.from('dirt_scores').delete().neq('id', '00000000-0000-0000-0000-000000000000')
+    await deleteAllScores()
     setScores([])
     setLoading(false)
   }

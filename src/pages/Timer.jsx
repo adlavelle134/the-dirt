@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase, formatTime } from '../lib/supabase'
+import { insertScore } from '../lib/db'
+import { formatTime } from '../lib/supabase'
 import { playCountdownBeep, playGoTone, playTick, playStop, playVictoryJingle } from '../lib/audio'
 
 const PHASES = { COUNTDOWN: 'countdown', RUNNING: 'running', ENTRY: 'entry', SAVING: 'saving', SAVED: 'saved' }
@@ -110,13 +111,10 @@ export default function Timer() {
     setPhase(PHASES.SAVING)
     playVictoryJingle()
 
-    const { error } = await supabase.from('dirt_scores').insert({
-      initials: trimmed.padEnd(3, '_').slice(0, 3),
-      time_ms: elapsedMs,
-    })
-
-    if (error) {
-      setSaveError(`${error.message} (${error.code})`)
+    try {
+      await insertScore(trimmed.padEnd(3, '_').slice(0, 3), elapsedMs)
+    } catch (err) {
+      setSaveError(err.message)
       setPhase(PHASES.ENTRY)
       return
     }

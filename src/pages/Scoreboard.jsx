@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { supabase, formatTime, formatDate } from '../lib/supabase'
+import { fetchScores } from '../lib/db'
+import { formatTime, formatDate } from '../lib/supabase'
 
 const RANK_CLASS = ['rank-gold', 'rank-silver', 'rank-bronze']
 const RANK_LABEL = ['🥇', '🥈', '🥉']
@@ -17,16 +18,11 @@ export default function Scoreboard() {
     setRefreshing(true)
     setError('')
 
-    const { data, error: err } = await supabase
-      .from('dirt_scores')
-      .select('*')
-      .order('time_ms', { ascending: true })
-      .limit(50)
-
-    if (err) {
-      setError(`${err.message} (${err.code})`)
-    } else {
-      setScores(data || [])
+    try {
+      const rows = await fetchScores()
+      setScores(rows)
+    } catch (err) {
+      setError(err.message)
     }
     setLoading(false)
     setRefreshing(false)
