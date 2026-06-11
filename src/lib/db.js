@@ -1,56 +1,68 @@
-import { createClient } from '@libsql/client/web'
+const TURSO_URL = import.meta.env.VITE_TURSO_URL
+const TURSO_TOKEN = import.meta.env.VITE_TURSO_TOKEN
 
-let _client = null
-
-function getClient() {
-  if (!_client) {
-    _client = createClient({
-      url: import.meta.env.VITE_TURSO_URL,
-      authToken: import.meta.env.VITE_TURSO_TOKEN,
-    })
-  }
-  return _client
+function toArg(val) {
+  if (val === null || val === undefined) return { type: 'null' }
+  if (typeof val === 'number') return { type: 'integer', value: String(val) }
+  return { type: 'text', value: String(val) }
 }
 
-function toRows(result) {
-  return result.rows.map(row => ({
-    id: row.id,
-    initials: row.initials,
-    time_ms: Number(row.time_ms),
-    created_at: row.created_at,
-  }))
+async function sql(query, args = []) {
+  const res = await fetch(`${TURSO_URL}/v2/pipeline`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${TURSO_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      requests: [
+        { type: 'execute', stmt: { sql: query, args: args.map(toArg) } },
+        { type: 'close' },
+      ],
+    }),
+  })
+
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`HTTP ${res.status}: ${text}`)
+  }
+
+  const data = await res.json()
+  const result = data.results?.[0]
+
+  if (result?.type === 'error') {
+    throw new Error(result.error?.message || 'Query error')
+  }
+
+  const cols = result?.response?.result?.cols?.map(c => c.name) || []
+  const rows = (result?.response?.result?.rows || []).map(row =>
+    Object.fromEntries(cols.map((col, i) => [col, row[i]?.value ?? null]))
+  )
+
+  return rows
 }
 
 export async function fetchScores() {
-  const result = await getClient().execute(
-    'SELECT * FROM dirt_scores ORDER BY time_ms ASC LIMIT 50'
-  )
-  return toRows(result)
+  return sql('SELECT * FROM dirt_scores ORDER BY time_ms ASC LIMIT 50')
 }
 
 export async function fetchAllScores() {
-  const result = await getClient().execute(
-    'SELECT * FROM dirt_scores ORDER BY time_ms ASC'
-  )
-  return toRows(result)
+  return sql('SELECT * FROM dirt_scores ORDER BY time_ms ASC')
 }
 
 export async function insertScore(initials, time_ms) {
   const id = crypto.randomUUID()
   const created_at = new Date().toISOString()
-  await getClient().execute({
-    sql: 'INSERT INTO dirt_scores (id, initials, time_ms, created_at) VALUES (?, ?, ?, ?)',
-    args: [id, initials, time_ms, created_at],
-  })
+  await sql(
+    'INSERT INTO dirt_scores (id, initials, time_ms, created_at) VALUES (?, ?, ?, ?)',
+    [id, initials, time_ms, created_at]
+  )
 }
 
 export async function deleteScore(id) {
-  await getClient().execute({
-    sql: 'DELETE FROM dirt_scores WHERE id = ?',
-    args: [id],
-  })
+  await sql('DELETE FROM dirt_scores WHERE id = ?', [id])
 }
 
 export async function deleteAllScores() {
-  await getClient().execute('DELETE FROM dirt_scores')
+  await sql('DELETE FROM dirt_scores')
 }
