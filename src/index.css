@@ -445,7 +445,6 @@ body {
 
 .score-table th {
   color: var(--cyan);
-  text-shadow: var(--glow-cyan);
   border-bottom: 2px solid var(--cyan);
   padding: 8px 6px;
   text-align: left;

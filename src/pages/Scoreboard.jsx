@@ -51,7 +51,6 @@ export default function Scoreboard() {
         fontFamily: 'var(--font-arcade)',
         fontSize: 'clamp(1rem, 5vw, 1.8rem)',
         color: 'var(--yellow)',
-        textShadow: 'var(--glow-yellow)',
         textAlign: 'center',
         letterSpacing: '4px',
         marginBottom: '4px',

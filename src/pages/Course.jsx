@@ -26,7 +26,7 @@ export default function Course() {
         </button>
       </div>
 
-      <h1 className="neon-cyan" style={{
+      <h1 style={{
         fontFamily: 'var(--font-arcade)',
         fontSize: 'clamp(1.2rem, 5vw, 2rem)',
         textAlign: 'center',
