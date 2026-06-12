@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { fetchScores } from '../lib/db'
+import { fetchScores as fetchScoresFromDB } from '../lib/db'
 import { formatTime, formatDate } from '../lib/supabase'
 
 const RANK_CLASS = ['rank-gold', 'rank-silver', 'rank-bronze']
@@ -13,13 +13,13 @@ export default function Scoreboard() {
   const [error, setError] = useState('')
   const [refreshing, setRefreshing] = useState(false)
 
-  const fetchScores = useCallback(async (quiet = false) => {
+  const loadScores = useCallback(async (quiet = false) => {
     if (!quiet) setLoading(true)
     setRefreshing(true)
     setError('')
 
     try {
-      const rows = await fetchScores()
+      const rows = await fetchScoresFromDB()
       setScores(rows)
     } catch (err) {
       setError(err.message)
@@ -28,7 +28,7 @@ export default function Scoreboard() {
     setRefreshing(false)
   }, [])
 
-  useEffect(() => { fetchScores() }, [fetchScores])
+  useEffect(() => { loadScores() }, [loadScores])
 
   return (
     <div className="page">
@@ -39,7 +39,7 @@ export default function Scoreboard() {
         </button>
         <button
           className="btn btn-purple btn-small"
-          onClick={() => fetchScores(true)}
+          onClick={() => loadScores(true)}
           disabled={refreshing}
           style={{ opacity: refreshing ? 0.5 : 1 }}
         >
@@ -73,7 +73,7 @@ export default function Scoreboard() {
           <p style={{ fontFamily: 'var(--font-arcade)', fontSize: '0.55rem', color: 'var(--hot-pink)', letterSpacing: '2px' }}>
             {error}
           </p>
-          <button className="btn btn-pink btn-small mt-4" onClick={() => fetchScores()}>RETRY</button>
+          <button className="btn btn-pink btn-small mt-4" onClick={() => loadScores()}>RETRY</button>
         </div>
       )}
 
