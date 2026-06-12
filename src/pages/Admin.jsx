@@ -60,7 +60,6 @@ export default function Admin() {
         fontFamily: 'var(--font-arcade)',
         fontSize: 'clamp(1rem, 4.5vw, 1.6rem)',
         color: 'var(--orange)',
-        textShadow: 'var(--glow-orange)',
         textAlign: 'center',
         letterSpacing: '4px',
         marginBottom: '4px',
