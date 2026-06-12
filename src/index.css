@@ -351,6 +351,7 @@ body {
 .btn-small {
   font-size: 0.55rem;
   padding: 10px 16px;
+  box-shadow: none !important;
 }
 
 /* ===== ARCADE CARD / PANEL ===== */
@@ -480,7 +481,6 @@ body {
   color: var(--hot-pink);
   text-transform: uppercase;
   outline: none;
-  box-shadow: 0 0 15px rgba(255, 45, 120, 0.4);
   caret-color: transparent;
   letter-spacing: 0;
 }
@@ -488,7 +488,6 @@ body {
 .initial-input:focus {
   border-color: var(--yellow);
   color: var(--yellow);
-  box-shadow: var(--glow-yellow);
 }
 
 /* ===== OBSTACLE LIST ===== */
