@@ -61,6 +61,10 @@ export default function Scoreboard() {
 
       <div className="divider" />
 
+      <button className="btn btn-orange" style={{ fontSize: '0.6rem', padding: '12px 24px', marginBottom: '16px' }} onClick={() => navigate('/personal-best')}>
+        MY PERSONAL BEST
+      </button>
+
       {loading && (
         <div style={{ marginTop: '60px' }}>
           <p className="loading-text">LOADING...</p>
@@ -117,12 +121,9 @@ export default function Scoreboard() {
         </div>
       )}
 
-      <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+      <div style={{ marginTop: '32px' }}>
         <button className="btn btn-start" style={{ fontSize: '0.7rem', padding: '16px 32px' }} onClick={() => navigate('/timer')}>
           ▶ PLAY AGAIN
-        </button>
-        <button className="btn btn-orange" style={{ fontSize: '0.6rem', padding: '12px 24px' }} onClick={() => navigate('/personal-best')}>
-          MY PERSONAL BEST
         </button>
       </div>
     </div>
