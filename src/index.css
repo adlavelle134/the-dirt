@@ -459,9 +459,9 @@ body {
   vertical-align: middle;
 }
 
-.rank-gold td { color: var(--gold); text-shadow: 0 0 8px var(--gold); background: rgba(255, 215, 0, 0.05); }
-.rank-silver td { color: var(--silver); text-shadow: 0 0 6px var(--silver); background: rgba(192, 192, 192, 0.05); }
-.rank-bronze td { color: var(--bronze); text-shadow: 0 0 6px var(--bronze); background: rgba(205, 127, 50, 0.05); }
+.rank-gold td { color: var(--gold); background: rgba(255, 215, 0, 0.05); }
+.rank-silver td { color: var(--silver); background: rgba(192, 192, 192, 0.05); }
+.rank-bronze td { color: var(--bronze); background: rgba(205, 127, 50, 0.05); }
 
 /* ===== INITIALS INPUT ===== */
 .initials-container {

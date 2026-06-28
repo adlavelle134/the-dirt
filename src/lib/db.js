@@ -4,6 +4,12 @@ export async function fetchScores() {
   return res.json()
 }
 
+export async function fetchPersonalBest(initials) {
+  const res = await fetch(`/api/scores?initials=${encodeURIComponent(initials)}`)
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
+  return res.json()
+}
+
 export async function fetchAllScores() {
   const res = await fetch('/api/admin')
   if (!res.ok) throw new Error(`HTTP ${res.status}`)

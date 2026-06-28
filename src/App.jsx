@@ -5,6 +5,7 @@ import Course from './pages/Course'
 import Timer from './pages/Timer'
 import Scoreboard from './pages/Scoreboard'
 import Admin from './pages/Admin'
+import PersonalBest from './pages/PersonalBest'
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/course" element={<Course />} />
         <Route path="/timer" element={<Timer />} />
         <Route path="/scoreboard" element={<Scoreboard />} />
+        <Route path="/personal-best" element={<PersonalBest />} />
         <Route path="/admin" element={<Admin />} />
       </Routes>
     </>
