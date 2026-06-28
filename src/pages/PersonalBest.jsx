@@ -118,12 +118,9 @@ export default function PersonalBest() {
 
   return (
     <div className="page">
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center', marginBottom: '8px' }}>
         <button className="btn btn-cyan btn-small" onClick={() => navigate('/scoreboard')}>
           ← SCOREBOARD
-        </button>
-        <button className="btn btn-start" style={{ fontSize: '0.6rem', padding: '10px 20px' }} onClick={() => navigate('/timer')}>
-          ▶ PLAY AGAIN
         </button>
       </div>
 
@@ -134,7 +131,7 @@ export default function PersonalBest() {
         textAlign: 'center',
         letterSpacing: '4px',
         marginBottom: '4px',
-        marginTop: '8px',
+        marginTop: '28px',
       }}>
         YOU VS YOU
       </h1>
@@ -196,6 +193,12 @@ export default function PersonalBest() {
           </table>
         </div>
       )}
+
+      <div style={{ marginTop: '32px' }}>
+        <button className="btn btn-start" style={{ fontSize: '0.7rem', padding: '16px 32px' }} onClick={() => navigate('/timer')}>
+          ▶ PLAY AGAIN
+        </button>
+      </div>
     </div>
   )
 }
