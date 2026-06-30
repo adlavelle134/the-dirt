@@ -2,36 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 
 export default function CourseWalkthrough() {
   const canvasRef = useRef(null)
-  const containerRef = useRef(null)
   const [caption, setCaption] = useState('THE DIRT')
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isFullscreen, setIsFullscreen] = useState(false)
   const handlePlayRef = useRef(null)
   const handleResetRef = useRef(null)
-
-  function toggleFullscreen() {
-    const el = containerRef.current
-    if (!el) return
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      if (el.requestFullscreen) el.requestFullscreen()
-      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen()
-    } else {
-      if (document.exitFullscreen) document.exitFullscreen()
-      else if (document.webkitExitFullscreen) document.webkitExitFullscreen()
-    }
-  }
-
-  useEffect(() => {
-    function onFullscreenChange() {
-      setIsFullscreen(!!(document.fullscreenElement || document.webkitFullscreenElement))
-    }
-    document.addEventListener('fullscreenchange', onFullscreenChange)
-    document.addEventListener('webkitfullscreenchange', onFullscreenChange)
-    return () => {
-      document.removeEventListener('fullscreenchange', onFullscreenChange)
-      document.removeEventListener('webkitfullscreenchange', onFullscreenChange)
-    }
-  }, [])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -1075,24 +1049,6 @@ export default function CourseWalkthrough() {
 
   return (
     <div style={{ width: '100%', maxWidth: '520px', marginTop: '32px', textAlign: 'center' }}>
-      <style>{`
-        .walkthrough-panel:fullscreen,
-        .walkthrough-panel:-webkit-full-screen {
-          background: #000;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 12px;
-          box-sizing: border-box;
-        }
-        .walkthrough-panel:fullscreen canvas,
-        .walkthrough-panel:-webkit-full-screen canvas {
-          width: 100% !important;
-          height: auto !important;
-          max-height: 80vh;
-        }
-      `}</style>
       <h2 style={{
         fontFamily: 'var(--font-arcade)',
         fontSize: 'clamp(0.65rem, 3vw, 0.9rem)',
@@ -1102,15 +1058,11 @@ export default function CourseWalkthrough() {
       }}>
         PREVIEW THE COURSE
       </h2>
-      <div
-        ref={containerRef}
-        className="walkthrough-panel"
-        style={{
-          border: '2px solid var(--cyan)',
-          background: 'rgba(0,0,20,0.85)',
-          padding: '8px',
-        }}
-      >
+      <div style={{
+        border: '2px solid var(--cyan)',
+        background: 'rgba(0,0,20,0.85)',
+        padding: '8px',
+      }}>
         <canvas
           ref={canvasRef}
           width={640}
@@ -1142,12 +1094,6 @@ export default function CourseWalkthrough() {
             onClick={() => handleResetRef.current?.()}
           >
             ↺ RESET
-          </button>
-          <button
-            className="btn btn-orange btn-small"
-            onClick={toggleFullscreen}
-          >
-            {isFullscreen ? '✕ EXIT' : '⛶ FULLSCREEN'}
           </button>
         </div>
       </div>
