@@ -8,12 +8,17 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      const { initials } = req.query
+      const { initials, variant } = req.query
       let rows
       if (initials) {
         rows = await turso(
           'SELECT * FROM dirt_scores WHERE UPPER(initials) = ? ORDER BY time_ms ASC',
           [initials.toUpperCase()]
+        )
+      } else if (variant) {
+        rows = await turso(
+          'SELECT * FROM dirt_scores WHERE variant = ? ORDER BY time_ms ASC LIMIT 50',
+          [variant]
         )
       } else {
         rows = await turso('SELECT * FROM dirt_scores ORDER BY time_ms ASC LIMIT 50')
@@ -22,12 +27,12 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      const { initials, time_ms } = req.body
+      const { initials, time_ms, variant } = req.body
       const id = crypto.randomUUID()
       const created_at = new Date().toISOString()
       await turso(
-        'INSERT INTO dirt_scores (id, initials, time_ms, created_at) VALUES (?, ?, ?, ?)',
-        [id, initials, time_ms, created_at]
+        'INSERT INTO dirt_scores (id, initials, time_ms, created_at, variant) VALUES (?, ?, ?, ?, ?)',
+        [id, initials, time_ms, created_at, variant || 'Standard 1.0']
       )
       return res.status(200).json({ ok: true })
     }

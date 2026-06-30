@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { fetchScores as fetchScoresFromDB } from '../lib/db'
+import { fetchScores as fetchScoresFromDB, VARIANTS } from '../lib/db'
 import { formatTime, formatDate } from '../lib/supabase'
 
 const RANK_CLASS = ['rank-gold', 'rank-silver', 'rank-bronze']
@@ -12,14 +12,15 @@ export default function Scoreboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [refreshing, setRefreshing] = useState(false)
+  const [variant, setVariant] = useState(VARIANTS[0])
 
-  const loadScores = useCallback(async (quiet = false) => {
+  const loadScores = useCallback(async (quiet = false, v) => {
     if (!quiet) setLoading(true)
     setRefreshing(true)
     setError('')
 
     try {
-      const rows = await fetchScoresFromDB()
+      const rows = await fetchScoresFromDB(v)
       setScores(rows)
     } catch (err) {
       setError(err.message)
@@ -28,7 +29,7 @@ export default function Scoreboard() {
     setRefreshing(false)
   }, [])
 
-  useEffect(() => { loadScores() }, [loadScores])
+  useEffect(() => { loadScores(false, variant) }, [loadScores, variant])
 
   return (
     <div className="page">
@@ -39,7 +40,7 @@ export default function Scoreboard() {
         </button>
         <button
           className="btn btn-purple btn-small"
-          onClick={() => loadScores(true)}
+          onClick={() => loadScores(true, variant)}
           disabled={refreshing}
           style={{ opacity: refreshing ? 0.5 : 1 }}
         >
@@ -61,6 +62,15 @@ export default function Scoreboard() {
 
       <div className="divider" />
 
+      <select
+        className="arcade-select"
+        value={variant}
+        onChange={e => setVariant(e.target.value)}
+        style={{ marginBottom: '12px' }}
+      >
+        {VARIANTS.map(v => <option key={v} value={v}>{v}</option>)}
+      </select>
+
       <button className="btn btn-orange" style={{ fontSize: '0.6rem', padding: '12px 24px', marginBottom: '16px' }} onClick={() => navigate('/personal-best')}>
         MY PERSONAL BEST
       </button>
@@ -76,7 +86,7 @@ export default function Scoreboard() {
           <p style={{ fontFamily: 'var(--font-arcade)', fontSize: '0.55rem', color: 'var(--hot-pink)', letterSpacing: '2px' }}>
             {error}
           </p>
-          <button className="btn btn-pink btn-small mt-4" onClick={() => loadScores()}>RETRY</button>
+          <button className="btn btn-pink btn-small mt-4" onClick={() => loadScores(false, variant)}>RETRY</button>
         </div>
       )}
 

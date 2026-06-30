@@ -12,7 +12,7 @@ export default function Home() {
 
   function handleStart() {
     unlockAudio()
-    navigate('/timer')
+    navigate('/select-variant')
   }
 
   function handleOptionsSubmit(e) {

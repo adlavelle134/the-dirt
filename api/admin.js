@@ -8,7 +8,13 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      const rows = await turso('SELECT * FROM dirt_scores ORDER BY time_ms ASC')
+      const { variant } = req.query
+      let rows
+      if (variant && variant !== 'All') {
+        rows = await turso('SELECT * FROM dirt_scores WHERE variant = ? ORDER BY time_ms ASC', [variant])
+      } else {
+        rows = await turso('SELECT * FROM dirt_scores ORDER BY time_ms ASC')
+      }
       return res.status(200).json(rows)
     }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { fetchAllScores, deleteScore, deleteAllScores } from '../lib/db'
+import { fetchAllScores, deleteScore, deleteAllScores, VARIANTS } from '../lib/db'
 import { formatTime, formatDate } from '../lib/supabase'
 
 export default function Admin() {
@@ -10,12 +10,13 @@ export default function Admin() {
   const [error, setError] = useState('')
   const [confirmClearAll, setConfirmClearAll] = useState(false)
   const [deletingId, setDeletingId] = useState(null)
+  const [variantFilter, setVariantFilter] = useState('All')
 
-  const fetchAll = useCallback(async () => {
+  const fetchAll = useCallback(async (v) => {
     setLoading(true)
     setError('')
     try {
-      const rows = await fetchAllScores()
+      const rows = await fetchAllScores(v)
       setScores(rows)
     } catch (err) {
       setError(err.message)
@@ -23,7 +24,7 @@ export default function Admin() {
     setLoading(false)
   }, [])
 
-  useEffect(() => { fetchAll() }, [fetchAll])
+  useEffect(() => { fetchAll(variantFilter) }, [fetchAll, variantFilter])
 
   async function handleDelete(id) {
     setDeletingId(id)
@@ -70,6 +71,16 @@ export default function Admin() {
 
       <div className="divider" />
 
+      <select
+        className="arcade-select"
+        value={variantFilter}
+        onChange={e => setVariantFilter(e.target.value)}
+        style={{ marginBottom: '12px' }}
+      >
+        <option value="All">All Variants</option>
+        {VARIANTS.map(v => <option key={v} value={v}>{v}</option>)}
+      </select>
+
       {loading && <p className="loading-text" style={{ marginTop: '40px' }}>LOADING...</p>}
 
       {error && (
@@ -101,6 +112,7 @@ export default function Admin() {
                   <th>#</th>
                   <th>NAME</th>
                   <th>TIME</th>
+                  <th>VARIANT</th>
                   <th>DATE</th>
                   <th>DEL</th>
                 </tr>
@@ -111,6 +123,7 @@ export default function Admin() {
                     <td>{i + 1}</td>
                     <td style={{ letterSpacing: '3px' }}>{score.initials}</td>
                     <td style={{ fontFamily: 'monospace', fontSize: '0.6rem' }}>{formatTime(score.time_ms)}</td>
+                    <td style={{ opacity: 0.7, fontSize: '0.42rem', letterSpacing: '0.5px' }}>{score.variant || 'Standard 1.0'}</td>
                     <td style={{ opacity: 0.6, fontSize: '0.42rem' }}>{formatDate(score.created_at)}</td>
                     <td>
                       <button

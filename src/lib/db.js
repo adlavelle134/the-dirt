@@ -1,5 +1,8 @@
-export async function fetchScores() {
-  const res = await fetch('/api/scores')
+export const VARIANTS = ['Standard 1.0', 'Endurance 1.0']
+
+export async function fetchScores(variant) {
+  const params = variant ? `?variant=${encodeURIComponent(variant)}` : ''
+  const res = await fetch(`/api/scores${params}`)
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return res.json()
 }
@@ -10,17 +13,18 @@ export async function fetchPersonalBest(initials) {
   return res.json()
 }
 
-export async function fetchAllScores() {
-  const res = await fetch('/api/admin')
+export async function fetchAllScores(variant) {
+  const params = variant && variant !== 'All' ? `?variant=${encodeURIComponent(variant)}` : ''
+  const res = await fetch(`/api/admin${params}`)
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return res.json()
 }
 
-export async function insertScore(initials, time_ms) {
+export async function insertScore(initials, time_ms, variant) {
   const res = await fetch('/api/scores', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ initials, time_ms }),
+    body: JSON.stringify({ initials, time_ms, variant: variant || 'Standard 1.0' }),
   })
   if (!res.ok) {
     const data = await res.json().catch(() => ({}))

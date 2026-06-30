@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { insertScore } from '../lib/db'
 import { formatTime } from '../lib/supabase'
 import { playCountdownBeep, playGoTone, playTick, playStop, playVictoryJingle } from '../lib/audio'
@@ -8,6 +8,8 @@ const PHASES = { COUNTDOWN: 'countdown', RUNNING: 'running', ENTRY: 'entry', SAV
 
 export default function Timer() {
   const navigate = useNavigate()
+  const { state } = useLocation()
+  const variant = state?.variant || 'Standard 1.0'
   const [phase, setPhase] = useState(PHASES.COUNTDOWN)
   const [countdown, setCountdown] = useState(5)
   const [countdownLabel, setCountdownLabel] = useState('5')
@@ -112,7 +114,7 @@ export default function Timer() {
     playVictoryJingle()
 
     try {
-      await insertScore(trimmed.padEnd(3, '_').slice(0, 3), elapsedMs)
+      await insertScore(trimmed.padEnd(3, '_').slice(0, 3), elapsedMs, variant)
     } catch (err) {
       setSaveError(err.message)
       setPhase(PHASES.ENTRY)
