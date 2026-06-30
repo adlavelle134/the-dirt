@@ -40,6 +40,17 @@ export default function Course() {
 
       <div className="divider" />
 
+      <p style={{
+        fontFamily: 'var(--font-arcade)',
+        fontSize: '0.6rem',
+        color: 'var(--orange)',
+        letterSpacing: '3px',
+        marginBottom: '4px',
+        marginTop: '8px',
+      }}>
+        Standard 1.0
+      </p>
+
       <CourseWalkthrough />
 
       {/* Obstacle List */}
