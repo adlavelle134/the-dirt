@@ -1,12 +1,13 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { fetchPersonalBest } from '../lib/db'
+import { fetchPersonalBest, VARIANTS } from '../lib/db'
 import { formatTime, formatDate } from '../lib/supabase'
 
 export default function PersonalBest() {
   const navigate = useNavigate()
   const [phase, setPhase] = useState('entry')
   const [initials, setInitials] = useState(['', '', ''])
+  const [variant, setVariant] = useState(VARIANTS[0])
   const [scores, setScores] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -35,7 +36,7 @@ export default function PersonalBest() {
     setLoading(true)
     setError('')
     try {
-      const rows = await fetchPersonalBest(trimmed)
+      const rows = await fetchPersonalBest(trimmed, variant)
       setScores(rows)
       setPhase('results')
     } catch (err) {
@@ -67,6 +68,25 @@ export default function PersonalBest() {
           }}>
             ENTER YOUR INITIALS
           </h3>
+
+          <label style={{
+            display: 'block',
+            fontFamily: 'var(--font-arcade)',
+            fontSize: '0.5rem',
+            color: 'rgba(255,255,255,0.5)',
+            letterSpacing: '2px',
+            marginBottom: '10px',
+          }}>
+            SELECT VARIANT
+          </label>
+          <select
+            className="arcade-select"
+            value={variant}
+            onChange={e => setVariant(e.target.value)}
+            style={{ marginBottom: '24px' }}
+          >
+            {VARIANTS.map(v => <option key={v} value={v}>{v}</option>)}
+          </select>
 
           <div className="initials-container">
             {[0, 1, 2].map(idx => (
@@ -141,9 +161,18 @@ export default function PersonalBest() {
         fontSize: '0.55rem',
         color: 'var(--hot-pink)',
         letterSpacing: '3px',
-        marginBottom: '8px',
+        marginBottom: '4px',
       }}>
         {name}
+      </p>
+      <p style={{
+        fontFamily: 'var(--font-arcade)',
+        fontSize: '0.45rem',
+        color: 'rgba(255,255,255,0.4)',
+        letterSpacing: '2px',
+        marginBottom: '8px',
+      }}>
+        {variant}
       </p>
 
       <div className="divider" />

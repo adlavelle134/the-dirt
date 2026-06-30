@@ -7,8 +7,10 @@ export async function fetchScores(variant) {
   return res.json()
 }
 
-export async function fetchPersonalBest(initials) {
-  const res = await fetch(`/api/scores?initials=${encodeURIComponent(initials)}`)
+export async function fetchPersonalBest(initials, variant) {
+  const params = new URLSearchParams({ initials })
+  if (variant) params.set('variant', variant)
+  const res = await fetch(`/api/scores?${params}`)
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   return res.json()
 }

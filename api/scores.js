@@ -10,7 +10,12 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       const { initials, variant } = req.query
       let rows
-      if (initials) {
+      if (initials && variant) {
+        rows = await turso(
+          'SELECT * FROM dirt_scores WHERE UPPER(initials) = ? AND variant = ? ORDER BY time_ms ASC',
+          [initials.toUpperCase(), variant]
+        )
+      } else if (initials) {
         rows = await turso(
           'SELECT * FROM dirt_scores WHERE UPPER(initials) = ? ORDER BY time_ms ASC',
           [initials.toUpperCase()]
