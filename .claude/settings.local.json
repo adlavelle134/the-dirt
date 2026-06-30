@@ -6,7 +6,8 @@
       "Bash(npm init *)",
       "Bash(npm install *)",
       "Bash(npm run *)",
-      "Bash(vercel --version)"
+      "Bash(vercel --version)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\adlav\\\\The Dirt\\\\reference\\\\course-walkthrough-reference.js\")"
     ]
   }
 }

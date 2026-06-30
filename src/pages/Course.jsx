@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import CourseWalkthrough from '../components/CourseWalkthrough'
 
 const OBSTACLES = [
   { name: 'Over & Out', desc: 'Four beams stand in your way. Weave through, grab the sandbag, bring it back to the start, and throw your way back through every single one.' },
@@ -38,6 +39,8 @@ export default function Course() {
       </h1>
 
       <div className="divider" />
+
+      <CourseWalkthrough />
 
       {/* Obstacle List */}
       <div className="arcade-panel w-full" style={{ maxWidth: '480px' }}>
