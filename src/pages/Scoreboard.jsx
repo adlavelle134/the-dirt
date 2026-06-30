@@ -132,7 +132,7 @@ export default function Scoreboard() {
       )}
 
       <div style={{ marginTop: '32px' }}>
-        <button className="btn btn-start" style={{ fontSize: '0.7rem', padding: '16px 32px' }} onClick={() => navigate('/timer')}>
+        <button className="btn btn-start" style={{ fontSize: '0.7rem', padding: '16px 32px' }} onClick={() => navigate('/select-variant')}>
           ▶ PLAY AGAIN
         </button>
       </div>

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchPersonalBest, VARIANTS } from '../lib/db'
 import { formatTime, formatDate } from '../lib/supabase'
@@ -27,23 +27,33 @@ export default function PersonalBest() {
     }
   }
 
+  async function fetchResults(trimmed, v) {
+    setLoading(true)
+    setError('')
+    try {
+      const rows = await fetchPersonalBest(trimmed, v)
+      setScores(rows)
+    } catch (err) {
+      setError(err.message)
+    }
+    setLoading(false)
+  }
+
   async function handleSearch() {
     const trimmed = initials.join('').trim()
     if (trimmed.length === 0) {
       setError('ENTER YOUR INITIALS')
       return
     }
-    setLoading(true)
-    setError('')
-    try {
-      const rows = await fetchPersonalBest(trimmed, variant)
-      setScores(rows)
-      setPhase('results')
-    } catch (err) {
-      setError(err.message)
-    }
-    setLoading(false)
+    await fetchResults(trimmed, variant)
+    setPhase('results')
   }
+
+  useEffect(() => {
+    if (phase !== 'results') return
+    const trimmed = initials.join('').trim()
+    fetchResults(trimmed, variant)
+  }, [variant])
 
   if (phase === 'entry') {
     return (
@@ -68,25 +78,6 @@ export default function PersonalBest() {
           }}>
             ENTER YOUR INITIALS
           </h3>
-
-          <label style={{
-            display: 'block',
-            fontFamily: 'var(--font-arcade)',
-            fontSize: '0.5rem',
-            color: 'rgba(255,255,255,0.5)',
-            letterSpacing: '2px',
-            marginBottom: '10px',
-          }}>
-            SELECT VARIANT
-          </label>
-          <select
-            className="arcade-select"
-            value={variant}
-            onChange={e => setVariant(e.target.value)}
-            style={{ marginBottom: '24px' }}
-          >
-            {VARIANTS.map(v => <option key={v} value={v}>{v}</option>)}
-          </select>
 
           <div className="initials-container">
             {[0, 1, 2].map(idx => (
@@ -165,17 +156,16 @@ export default function PersonalBest() {
       }}>
         {name}
       </p>
-      <p style={{
-        fontFamily: 'var(--font-arcade)',
-        fontSize: '0.45rem',
-        color: 'rgba(255,255,255,0.4)',
-        letterSpacing: '2px',
-        marginBottom: '8px',
-      }}>
-        {variant}
-      </p>
-
       <div className="divider" />
+
+      <select
+        className="arcade-select"
+        value={variant}
+        onChange={e => setVariant(e.target.value)}
+        style={{ marginBottom: '12px' }}
+      >
+        {VARIANTS.map(v => <option key={v} value={v}>{v}</option>)}
+      </select>
 
       {scores.length === 0 ? (
         <div style={{ marginTop: '60px', textAlign: 'center' }}>
@@ -224,7 +214,7 @@ export default function PersonalBest() {
       )}
 
       <div style={{ marginTop: '32px' }}>
-        <button className="btn btn-start" style={{ fontSize: '0.7rem', padding: '16px 32px' }} onClick={() => navigate('/timer')}>
+        <button className="btn btn-start" style={{ fontSize: '0.7rem', padding: '16px 32px' }} onClick={() => navigate('/select-variant')}>
           ▶ PLAY AGAIN
         </button>
       </div>
